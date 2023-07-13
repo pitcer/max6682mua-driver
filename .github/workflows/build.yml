@@ -1,0 +1,33 @@
+name: Build the driver
+
+on:
+  push:
+    branches: ["main"]
+    paths-ignore: ["README.md"]
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Install and cache packages
+      uses: awalsh128/cache-apt-pkgs-action@latest
+      with:
+        packages: gcc-riscv64-linux-gnu libncurses-dev gawk flex bison openssl libssl-dev libelf-dev autoconf bc device-tree-compiler
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Build module
+      run: |
+        echo "Cloning the kernel"
+        git clone --depth=1 https://github.com/antmicro/linux -b litex-rebase build/linux/
+        echo "Building the kernel"
+        export ARCH=riscv
+        export CROSS_COMPILE=riscv64-linux-gnu-
+        export KBUILD_DIR=$(pwd)/build/linux/
+        cd build/linux/
+        make defconfig KBUILD_DEFCONFIG=../../../../../defconfig/linux
+        make -j$(nproc)
+        echo "Building the driver"
+        cd ../../driver-code/
+        make driver

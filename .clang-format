@@ -1,0 +1,10 @@
+BasedOnStyle: WebKit
+IndentWidth: 4
+UseTab: Never
+ColumnLimit: 80
+AllowShortIfStatementsOnASingleLine: false
+BreakBeforeBraces: Attach
+AllowAllConstructorInitializersOnNextLine: false
+BreakConstructorInitializers: AfterColon
+SpacesInContainerLiterals: false
+AllowShortFunctionsOnASingleLine: Empty
